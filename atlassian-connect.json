@@ -1,0 +1,18 @@
+{
+  "name": "Test Api jira service Desk",
+  "description": "Test Api jira service Desk",
+  "key": "atlassian-connect-app",
+  "scopes": [
+    "read", "write", "ACT_AS_USER"
+  ],
+  "baseUrl": "http://localhost:8000/",
+  "vendor": {
+    "name": "Example, Inc.",
+    "url": "http://example.com"
+  },
+  "authentication": {
+    "type": "none"
+  },
+  "apiVersion": 1,
+  "modules": {}
+}
