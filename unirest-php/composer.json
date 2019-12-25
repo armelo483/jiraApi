@@ -8,7 +8,8 @@
   "author": "Mashape <opensource@mashape.com> (https://www.mashape.com)",
   "require": {
     "php": ">=5.4.0",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-json": "*"
   },
   "suggest": {
     "ext-json": "Allows using JSON Bodies for sending and parsing requests"
