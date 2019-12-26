@@ -17,7 +17,8 @@ $ticketTypeArr = [
     "10"=>"Question sur la facturation et la license",
     "12"=>"Autre question",
     "9"=>"Support technique","11"=>"Question sur la version d'essai d'un produit",
-    "13"=>"Requête reçue par mail"
+    "13"=>"Requête reçue par mail",
+    "22"=> "OSAC"
 ];
 $headers = array(
   'Accept' => 'application/json',
@@ -123,7 +124,7 @@ include '_addAttachmentFile.php';
         //var_dump($_POST);
         //var_dump($_FILES);
         //exit;
-        //Pour le moment on crée que sur le serviceDesk "2"
+        //Pour le moment on crée que sur le serviceDesk "2" si c'est pas une requête ajax
         if(!isset($_POST['isAjax'])) {
             $requestTypeId = $_POST['type-ticket'];
             $summary = $_POST['resume'];
@@ -135,7 +136,8 @@ include '_addAttachmentFile.php';
             //var_dump($_POST); exit;
 //5dd7fbcf03eda50ef3876651 = idUser de Celine
 //On crée d'abord le ticket avant de recupérer son id et lui ajouter une pièce jointe (attachment)
-            $body = <<<REQUESTBODY
+            if(!isset($_POST['numerodecommande'])) {
+                $body = <<<REQUESTBODY
 { "raiseOnBehalfOf": "$quiSuisJe",
   "serviceDeskId": "$serviceDeskId",
   "requestTypeId": "$requestTypeId",
@@ -144,10 +146,42 @@ include '_addAttachmentFile.php';
    ],
   "requestFieldValues": {
     "summary": "$summary",
-    "description": "$description"
+    "description": "$description",
+    "Terrain": "terrain"
   }
 }
 REQUESTBODY;
+            }else {
+                $numeroCommande = $_POST['numerodecommande'];
+                $numerodeFacture = $_POST['numerodefacture'];
+                $terrain = $_POST['terrain'];
+                $agrement = $_POST['agrement'];
+                $nomDemandeur = $_POST['nomdemandeur'];
+                $typeDeService = $_POST['typedeservice'];
+                $responsable = 'responsable';
+                $summary = 'summary';
+
+                $body = <<<REQUESTBODY
+{ "raiseOnBehalfOf": "$quiSuisJe",
+  "serviceDeskId": "$serviceDeskId",
+  "requestTypeId": "$requestTypeId",
+  "requestParticipants": [
+    "5dd7fbcf03eda50ef3876651"
+   ],
+  "requestFieldValues": {
+    "summary": "$summary",
+    "description": "$description",
+    "customfield_10035": "$numeroCommande",
+    "customfield_10036": "$numerodeFacture",
+    "customfield_10037": "$agrement",
+    "customfield_10043": "$responsable",
+    "customfield_10041": "$typeDeService"
+  }
+}
+REQUESTBODY;
+
+            }
+
 
 
             $response = Unirest\Request::post(
@@ -286,6 +320,9 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
 <!-- loaders -->
 <div class="loader" id="loader"><img  src="plane-loading.gif"/></div>
 <style>
+    .parent-liste {
+    z-index:-45;
+    }
     #loader {
         //background: url(avion.gif);
         background: white;
@@ -316,40 +353,42 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
         font-family: 'Solway', serif;
     }
     .fade-in::before {
-        position:absolute;
+        //position:absolute;
         width: 100px;
         height: 100%;
         background: aquamarine;
-        border: 1px solid red;
-        z-index: 9999;
+        //border: 1px solid red;
+        //z-index: 9999;
 
     }
     .create-form-div-extra {
         opacity: 0;
         background: lemonchiffon;
-        z-index: -1;
+        z-index: 0;
         position: absolute;
         top:0;
         right: 340px;
         width: 400px;
         transition: all 1.6s ease-out;
-        transform: translateX(0);
+        transform: translateX(-7%);
 
     }
     .create-form-div-extra.show-extra {
         opacity: 1;
-        z-index: 99999;
+        z-index: 9999;
         //z-index: 0;
         transform: translateX(100%);
     }
     .fade-in {
         opacity: 0;
+        z-index: -100;
         //transform: translateX(-100%);
         transform: rotateY(-180deg);;
         transition: all .75s ease-in;
     }
 
     .fade-in.show {
+        z-index: 999;
         opacity: 1;
     //transform: translateX(0);
         transform: rotateY(0deg);
@@ -390,7 +429,7 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
         $('#selectbasic').change(function(){
             var valueOptionSelected = $("#selectbasic option:selected").val();
 
-            if(valueOptionSelected === '21') {
+            if(valueOptionSelected === '22') {
                 $('.create-form-div-extra').addClass('show-extra');
 
             }else {
@@ -526,7 +565,7 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
             var type = 'GET';
             var dataToSend = {isAjax : 'true', idIssueVal : idIssueVal};
             console.log(idIssueVal);
-
+            $('#loader').show();
             $.ajax({
                 type: type,
                 url: url,
@@ -574,12 +613,14 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
                         ' </div>\n' +
                     '</div><input type="hidden" name="isAjax" id="isAjax" value="true"><input type="hidden" name="idIssue" id="idIssue" value='+idIssueVal+'></form>';
                     $('#modalBody').html(contentString);
+                    $('#loader').hide();
                     //console.log(resp);
                     $('#fullHeightModalRight').modal('show');
                 },
                 error : function(resultat, statut, erreur){
                     console.log(erreur);
                     console.log(resultat);
+                    $('#loader').hide();
                     alert('oops');
                 },
                 beforeSend: function(xhr) {
@@ -635,12 +676,14 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
 
                 if ( $(this).hasClass('show') ) {
                     $(this).parent().parent().find('button.liste-tickets').html('Consulter l\'état de mes tickets');
+                    $(this).parent().css('z-index','-45');
                     //$('#overlayCustomer').show();
                     $(this).removeClass('show');
 
                     return "";
 
                 } else {
+                    $(this).parent().css('z-index','100');
                     $(this).parent().parent().find('button.liste-tickets').html('Annulez');
                     //$('#overlayCustomer').hide();
                     $(this).addClass('show');

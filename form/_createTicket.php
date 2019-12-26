@@ -20,7 +20,7 @@
                                    <option value="9">Support technique</option>
                                    <option value="11">Question sur la version d'essai d'un produit</option>
                                    <option value="13">Requête reçue par mail</option>
-                                   <option value="21">Ticket de type Osac</option>
+                                   <option value="22">Ticket de type Osac</option>
                                </select>
                            </div>
                        </div>
@@ -81,7 +81,7 @@
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="selectbasic">Numéro de commande</label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Votre numéro de commande" class="form-control input-md resume">
+                            <input id="textinput" name="numerodecommande" type="text" placeholder="Votre numéro de commande" class="form-control input-md resume">
                         </div>
                     </div>
 
@@ -89,7 +89,7 @@
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="textinput">Numéro de facture </label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Numéro de facture" class="form-control input-md resume">
+                            <input id="textinput" name="numerodefacture" type="text" placeholder="Numéro de facture" class="form-control input-md resume">
                         </div>
                     </div>
 
@@ -97,7 +97,7 @@
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="exampleFormControlFile1">Terrain</label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Terrain" class="form-control input-md resume">
+                            <input id="textinput" name="terrain" type="text" placeholder="Terrain" class="form-control input-md resume">
                         </div>
                     </div>
                     <!--<div class="form-group">
@@ -116,21 +116,21 @@
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="textarea">Agrément</label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Agrément" class="form-control input-md resume">
+                            <input id="textinput" name="agrement" type="text" placeholder="Agrément" class="form-control input-md resume">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="textarea">Nom demandeur</label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Nom demandeur" class="form-control input-md resume">
+                            <input id="textinput" name="nomdemandeur" type="text" placeholder="Nom demandeur" class="form-control input-md resume">
                         </div>
                     </div>
 
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="textarea">Type de service</label>
                         <div class="col-md-9">
-                            <input id="textinput" name="resume" type="text" placeholder="Type de service" class="form-control input-md resume">
+                            <input id="textinput" name="typedeservice" type="text" placeholder="Type de service" class="form-control input-md resume">
                         </div>
                     </div>
 

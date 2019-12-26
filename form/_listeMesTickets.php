@@ -1,5 +1,5 @@
 
-<div style="overflow: hidden;" class="col-xs-12 col-sm-12 col-md-12 col-lg-10  col-lg-offset-3">
+<div style="overflow: hidden;" class="parent-liste col-xs-12 col-sm-12 col-md-12 col-lg-10  col-lg-offset-3">
            <div class="create-form-div liste-tickets-div fade-in mt-3 pt-3 pl-3">
                <h3>Liste de mes tickets créés ou suivis(request participant)</h3>
                <table class="table" id="accordion">
@@ -15,7 +15,7 @@
                    </tr>
                    </thead>
                    <tbody>
-                   <?php foreach($filteredOwnerTicketArray as $key=>$ticket) { ?>
+                   <?php  foreach($filteredOwnerTicketArray as $key=>$ticket) { ?>
                        <tr>
                            <td><?php echo $ticket->reporter->displayName; ?></td>
                            <td><?php echo $ticket->requestFieldValues[0]->value; ?></td>
