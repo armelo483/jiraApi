@@ -1,5 +1,6 @@
 
 <div  style="margin-top: 18px;" class="col-xs-12 col-sm-10 col-md-10 col-lg-10">
+    <div class="christmas-hat"></div>
     <form class="form-horizontal" action="<?=$_SERVER['PHP_SELF'];?>" method="post" enctype='multipart/form-data' id="ticketForm">
     <div class="overlay" id="overlayTicket" style="position: absolute;width:100%;height:100%; z-index: 9999;"></div>
 

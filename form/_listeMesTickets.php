@@ -40,12 +40,19 @@
                                        $ticket->requestFieldValues =array_filter($ticket->requestFieldValues,function($value) {
                                            return ($value->fieldId!='summary'&&$value->fieldId!='attachment'&&$value->fieldId!='components');
                                        });
-                                       foreach($ticket->requestFieldValues as $key=>$ticketRequestedFieldItem) { ?>
+                                       foreach($ticket->requestFieldValues as $key=>&$ticketRequestedFieldItem) {?>
                                        <div class="row">
-                                           <div class="col-md-2 pull-right">
-                                               <b style="display: inline-block; font-weight: bolder;"><u><?php echo strtoupper($ticketRequestedFieldItem->fieldId); ?>:</u></b>
+                                           <div class="col-md-3 pull-right">
+                                               <b style="display: inline-block; font-weight: bolder;"><u>
+                                                       <?php
+                                                       if(strpos(strtolower($ticketRequestedFieldItem->fieldId), 'customfield')!== false) {
+                                                           echo strtoupper($ticketRequestedFieldItem->label);
+                                                       }else {
+                                                           echo strtoupper($ticketRequestedFieldItem->fieldId);
+                                                       }
+                                                        ?>:</u></b>
                                            </div>
-                                           <div class="col-md-10">
+                                           <div class="col-md-9">
                                                <?php echo $ticketRequestedFieldItem->value; ?>
                                            </div>
                                        </div>

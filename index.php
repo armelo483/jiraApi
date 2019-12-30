@@ -10,6 +10,13 @@ Unirest\Request::auth('celine-osac@eurelis.com', '6EEGmTiPv3l7c26cTt7pC29D');
 
 //$mailRapporteur= "rdvdir2019@gmail.com";
 //exit;
+$libelleExtraFieldArr = [
+    "customfield_10035" => "Numero de Commande",
+    "customfield_10036" => "Numero de Facture",
+    "customfield_10037" => "Agrement",
+    "customfield_10043" => "Responsable",
+    "customfield_10041" => "Type de Service"
+];
 $ticketTypeArr = [
 "15" =>"Nouvelle fonctionnalité",
 "14"=>"Signaler un bug",
@@ -320,6 +327,7 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
 <!-- loaders -->
 <div class="loader" id="loader"><img  src="plane-loading.gif"/></div>
 <style>
+
     .parent-liste {
     z-index:-45;
     }
@@ -412,6 +420,123 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
         opacity: 0;
     }
 
+    /* Animation code bienvenue */
+
+    .splashscreen {
+        position: absolute;
+        top:0;
+        left:0;
+        height:1440px;
+        width:100%;
+        background: #192018;
+        color: white;
+        z-index: 7000;
+        animation-delay: 14s;
+        text-align:center;
+        font-weight:300;
+        font-size:32px;
+        padding-top:20vh;
+        overflow:hidden;
+        -webkit-backface-visibility: hidden;
+        -webkit-perspective: 1000;
+        -webkit-transform: translate3d(0,0,0);
+
+    }
+
+    .splashscreen div {
+        display:inline-block;
+        overflow:hidden;
+        white-space:nowrap;
+    }
+
+    .splashscreen div:first-of-type {
+        animation: showup 21s forwards;
+    }
+
+    .splashscreen div.bonne-annee {
+        width:0px;
+        animation: reveal 21s forwards;
+    }
+
+
+    .splash-content{
+        padding-right: 7px !important;
+    }
+
+    .splashscreen div.bonne-annee {
+        margin-right:-380px;
+        margin-top: 0px;
+    //animation: slidein 14s forwards;
+        width: 370px;
+    //height: 40px;
+    //width: 100px;
+    //background: red;
+    }
+
+    .exclamation {
+        opacity: 0;
+        animation: showup 21s forwards 7s;
+    }
+
+    @keyframes showup {
+        0% {opacity:0;}
+        20% {opacity:0.2;}
+        80% {opacity:0.34;}
+        100% {opacity:0.34;}
+    }
+    .text-muted {
+        color: #ece617 !important;
+    }
+    @keyframes slidein {
+        0% { margin-left:100px; opacity:0; }
+        60% { margin-left:52px; opacity:0.1; }
+        89% { margin-left:22px; opacity:0.33;}
+        100% { margin-left:1px; opacity:0.34;}
+    }
+
+    @keyframes reveal {
+        0% {opacity:0;width:0px;}
+        20% {opacity:0.2;width:0px;}
+        25% {opacity:0.2;width:0px;}
+        80% {width:580px;}
+        80% {opacity:0.34;}
+        100% {opacity:0.34;width:580px;}
+    }
+
+    .create-ticket-row {
+        animation-delay: 15s !important;
+    }
+    /* css splashscreen */
+
+
+    .christmas-hat {
+        background-image: url(https://static-seloger.com/commons/header/hat.svg);
+        height: 49px;
+        position: absolute;
+        left: -28px;
+        top: -13px;
+        width: 47px;
+        z-index: 7779;
+    }
+
+    /* Animation Confetti */
+
+    [class|="confetti"] {
+        position: absolute;
+    }
+
+    .red {
+        background-color: #E94A3F;
+    }
+
+    .yellow {
+        background-color: #FAA040;
+    }
+
+    .blue {
+        background-color: #5FC9F5;
+    }
+    /* Fin Animation Confetti */
 
 </style>
 <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -422,7 +547,6 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
 <script type="text/javascript" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 
 <script  type="text/javascript">
-
 
     $(document).ready(function(){
 
@@ -462,8 +586,6 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
             }
 
         }
-
-
 
         $( "#accordion" ).on( "click", ".afficher-detail-ticket", function(event) {
             var idCollapsibleItem = $(this).attr('href');
@@ -753,9 +875,85 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
 
         });
 
+        /* JS ANIMATION SNOW PAPER */
+        for (var i = 0; i < 290; i++) {
+            create(i);
+        }
     });
+
+
+
+    function create(i) {
+        var width = Math.random() * 12;
+        var height = width * 0.6;
+        var colourIdx = Math.ceil(Math.random() * 3);
+        var colour = "red";
+        switch(colourIdx) {
+            case 1:
+                colour = "yellow";
+                break;
+            case 2:
+                colour = "blue";
+                break;
+            default:
+                colour = "red";
+        }
+        $('<div class="confetti-'+i+' '+colour+'"></div>').css({
+            "width" : width+"px",
+            "height" : height+"px",
+            "top" : -Math.random()*20+"%",
+            "left" : Math.random()*100+"%",
+            "opacity" : Math.random()+0.5,
+            "transform" : "rotate("+Math.random()*360+"deg)"
+        }).appendTo('.splashscreen');
+
+        drop(i);
+    }
+
+    function drop(x) {
+        $('.confetti-'+x).animate({
+            top: "100%",
+            left: "+="+Math.random()*15+"%"
+        }, Math.random()*3000 + 3000, function() {
+            reset(x);
+        });
+    }
+
+    function reset(x) {
+        $('.confetti-'+x).animate({
+            "top" : -Math.random()*20+"%",
+            "left" : "-="+Math.random()*15+"%"
+        }, 0, function() {
+            drop(x);
+        });
+    }
+
+    /* */
 </script>
 
+
+<!-- Bienvenue Animation -->
+<?php if (isset($_POST["nom"])) {?>
+    <div class="splashscreen animated slideOutLeft" style="/*background: #192018;*/ background: whitesmoke; color: black; display: flex;">
+
+        <div class="splashscreen-fix" style="position: relative;top: 87px;opacity:0.34;<?php
+        $moi = preg_split("/[\s,@-]+/", $_SESSION['moi'])[0];
+        if(strlen($moi)>7) {?> left: 609px; <?php }else {?> left: 527px; <?php } ?>">
+            <span> <?php
+                echo ucfirst($moi);
+                ?>  </span>
+            <span class="exclamation"> ! </span>
+        </div>
+
+        <div class="splashscreen-div bonne-annee" style="position: relative;top: 88px;opacity:0.34;">
+            Bonne année 2020
+        </div>
+
+
+    </div>
+<?php } ?>
+
+<!-- -->
 </body>
 
 </html>
