@@ -45,6 +45,10 @@ $quiSuisJe = '';
 $body = '';
 $showDiv ='';
 
+if(isset($_SESSION['moi'])) {
+    $moi = preg_split("/[\s,@-]+/", $_SESSION['moi'])[0];
+}
+
 //on recupère toutes les files d'attente du service DESK ID "2" (Service En Ligne)
 
 //var_dump($response);exit;
@@ -102,28 +106,7 @@ if(!empty($_POST)) {
     $response = "";
     $allMyTicketsArr = [];
 
-    if(!empty($_POST["nom"])){
-        $nom = trim($_POST["nom"]);
-        $_SESSION['moi'] = $nom;
-        $quiSuisJe = $nom;
-        //Unirest\Request::auth($nom, $mailTokenArr[$nom]);
-        //Unirest\Request::auth($nom, $mailTokenArr[$nom]);
-
-        $response = Unirest\Request::get(
-            $baseUrl.'/request',
-            $headers,
-            $body
-        );
-
-        $showDiv = ($response->code>=200 && $response->code<300)?:0;
-        $allMyTicketsArr = array_merge($allMyTicketsArr,$response->body->values);
-        _filterTicketsByOwner($quiSuisJe, $allMyTicketsArr,$filteredOwnerTicketArray);
-        //$filteredOwnerTicketArray = array_merge($filteredOwnerTicketArray,$allMyTicketsArr);
-        //var_dump($filteredOwnerTicketArray);
-        //var_dump($allMyTicketsArr);
-        //exit;
-        // Unirest\Request::auth('celine-osac@eurelis.com', '6EEGmTiPv3l7c26cTt7pC29D');
-    }elseif(isset($_POST["submitCreateTicket"]) || isset($_POST['isAjax'])) {
+    if(isset($_POST["submitCreateTicket"]) || isset($_POST['isAjax'])) {
 
 
         Unirest\Request::auth('celine-osac@eurelis.com', '6EEGmTiPv3l7c26cTt7pC29D');
@@ -143,7 +126,7 @@ include '_addAttachmentFile.php';
             //var_dump($_POST); exit;
 //5dd7fbcf03eda50ef3876651 = idUser de Celine
 //On crée d'abord le ticket avant de recupérer son id et lui ajouter une pièce jointe (attachment)
-            if(!isset($_POST['numerodecommande'])) {
+            if(empty($_POST['numerodecommande'])) {
                 $body = <<<REQUESTBODY
 { "raiseOnBehalfOf": "$quiSuisJe",
   "serviceDeskId": "$serviceDeskId",
@@ -153,8 +136,7 @@ include '_addAttachmentFile.php';
    ],
   "requestFieldValues": {
     "summary": "$summary",
-    "description": "$description",
-    "Terrain": "terrain"
+    "description": "$description"
   }
 }
 REQUESTBODY;
@@ -163,10 +145,11 @@ REQUESTBODY;
                 $numerodeFacture = $_POST['numerodefacture'];
                 $terrain = $_POST['terrain'];
                 $agrement = $_POST['agrement'];
-                $nomDemandeur = $_POST['nomdemandeur'];
+                //$nomDemandeur = $_POST['nomdemandeur'];
                 $typeDeService = $_POST['typedeservice'];
-                $responsable = 'responsable';
-                $summary = 'summary';
+                $responsable = $_POST['responsable'];
+                //$dateheure = $_POST['dateheure'];
+                $summary = $_POST['resume'];
 
                 $body = <<<REQUESTBODY
 { "raiseOnBehalfOf": "$quiSuisJe",
@@ -191,7 +174,7 @@ REQUESTBODY;
 
 
 
-            $response = Unirest\Request::post(
+           $response = Unirest\Request::post(
                 $baseUrl.'/request',
                 $headers,
                 $body
@@ -213,8 +196,8 @@ include '_sendCommentWithAttachment.php';
 
         $success = ($response->code>=200 && $response->code<300)?:0;
         if($success) {
-            $nomQuiSuisJe = explode("@", $quiSuisJe)[0];
-            $message = $nomQuiSuisJe.", nous avons bien reçu votre demande et sommes dessus !";
+            $moi = ucfirst($moi);
+            $message = $moi.", nous avons bien reçu votre demande et sommes dessus!";
         }else {
             $message = "Echec lors de la création du ticket";
         }
@@ -246,6 +229,37 @@ REQUESTBODY;
 
     }
 
+}
+
+
+//On recupère la liste de tous les tickets
+if(!empty($_SESSION["moi"])){
+
+    if(!empty($_POST["nom"])) {
+        $nom = trim($_POST["nom"]);
+        $_SESSION['moi'] = $nom;
+    }else {
+        $nom = $_SESSION['moi'];
+    }
+
+    $quiSuisJe = $nom;
+    //Unirest\Request::auth($nom, $mailTokenArr[$nom]);
+    //Unirest\Request::auth($nom, $mailTokenArr[$nom]);
+
+    $response = Unirest\Request::get(
+        $baseUrl.'/request',
+        $headers,
+        $body
+    );
+
+    $showDiv = ($response->code>=200 && $response->code<300)?:0;
+    $allMyTicketsArr = array_merge($allMyTicketsArr,$response->body->values);
+    _filterTicketsByOwner($quiSuisJe, $allMyTicketsArr,$filteredOwnerTicketArray);
+    //$filteredOwnerTicketArray = array_merge($filteredOwnerTicketArray,$allMyTicketsArr);
+    //var_dump($filteredOwnerTicketArray);
+    //var_dump($allMyTicketsArr);
+    //exit;
+    // Unirest\Request::auth('celine-osac@eurelis.com', '6EEGmTiPv3l7c26cTt7pC29D');
 }
 
 /*
@@ -288,7 +302,14 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
     <!-- Qui suis je -->
     <div class="row">
         <div class="col-md-12 identite mb-3" style ="background: lemonchiffon;height:124px;">
-            <legend> Qui suis je ?</legend>
+            <legend>
+                <?php if(!isset($_SESSION['moi'])) {
+                echo "Qui suis je ?";
+                }else {
+                    $moi = ucfirst(preg_split("/[\s,@-]+/", $_SESSION['moi'])[0]);
+                    echo "Bonjour ".$moi;
+                } ?>
+            </legend>
             <!-- Select Basic -->
             <form class="form-inline" id="loginForm" name="loginForm" method="post">
                 <div class="col-md-4 form-group">
@@ -307,12 +328,12 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
     </div> -->
 
     <!-- Créer et/ou consulter un ou des ticket(s) -->
-    <div class="row animated fadeInLeft <?php if(!$showDiv) {?>d-none <?php } ?> create-ticket-row">
-        <button class="btn btn-success create-ticket mt-8" style="z-index: 5000;width:126px; height: 470px;margin-top: 18px;">Créer un ticket</button>
-        <?php include 'form/_createTicket.php' ?>
-    </div>
+        <div class="row animated <?php if(!isset($_POST['submitCreateTicket'])) { ?>fadeInLeft create-ticket-row<?php } ?>"  <?php if(!isset($_SESSION['moi'])) {?>d-none <?php } ?> >
+            <button class="btn btn-success create-ticket mt-8" style="z-index: 5000;width:126px; height: 470px;margin-top: 18px;">Créer un ticket</button>
+            <?php include 'form/_createTicket.php' ?>
+        </div>
 
-    <div class="row  <?php if(!$showDiv) {?>d-none <?php } ?> liste-tickets-row">
+    <div class="row  <?php if(!isset($_SESSION['moi'])) {?>d-none <?php } ?> liste-tickets-row">
         <button class="btn btn-success liste-tickets mt-8" style="z-index: 5000;width:126px; height: 470px;margin-top: 18px;">Consulter l'état de mes tickets </button>
         <?php include 'form/_listeMesTickets.php' ?>
     </div>
@@ -816,7 +837,16 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
             });
 
         });
+        //$('.loader').show();
 
+        $("#identifie").click(function(){
+            $('.loader').css('top', '-207px');
+            $('.loader').show();
+        });
+        $("#createTicket").click(function(){
+            $('.loader').css('top', '-191px');
+            $('.loader').show();
+        });
         $(".create-compte").click(function(){
             $otherDiv = $(this).parent().parent().find('.create-ticket-div');
 
@@ -937,7 +967,7 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
     <div class="splashscreen animated slideOutLeft" style="/*background: #192018;*/ background: whitesmoke; color: black; display: flex;">
 
         <div class="splashscreen-fix" style="position: relative;top: 87px;opacity:0.34;<?php
-        $moi = preg_split("/[\s,@-]+/", $_SESSION['moi'])[0];
+
         if(strlen($moi)>7) {?> left: 609px; <?php }else {?> left: 527px; <?php } ?>">
             <span> <?php
                 echo ucfirst($moi);

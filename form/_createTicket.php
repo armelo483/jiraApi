@@ -64,7 +64,7 @@
                        <div class="form-group">
                            <label class="col-md-3 control-label" for="button1id"></label>
                            <div class="col-md-8">
-                               <button id="button1id" name="submitCreateTicket" class="btn btn-success" type="submit">Envoyer ma demande</button>
+                               <button id="createTicket" name="submitCreateTicket" class="btn btn-success" type="submit">Envoyer ma demande</button>
                            </div>
                        </div>
 
@@ -120,11 +120,25 @@
                             <input id="textinput" name="agrement" type="text" placeholder="Agrément" class="form-control input-md resume">
                         </div>
                     </div>
-
+                   <!--
                     <div class="form-group">
                         <label class="col-md-10 control-label" for="textarea">Nom demandeur</label>
                         <div class="col-md-9">
                             <input id="textinput" name="nomdemandeur" type="text" placeholder="Nom demandeur" class="form-control input-md resume">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-md-10 control-label" for="textarea">Date et heure</label>
+                        <div class="col-md-9">
+                            <input id="textinput" name="dateheure" type="text" placeholder="Date et heure" class="form-control input-md resume">
+                        </div>
+                    </div>
+-->
+                    <div class="form-group">
+                        <label class="col-md-10 control-label" for="textarea">Responsable</label>
+                        <div class="col-md-9">
+                            <input id="textinput" name="responsable" type="text" placeholder="Responsable" class="form-control input-md resume">
                         </div>
                     </div>
 
