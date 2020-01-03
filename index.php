@@ -45,9 +45,6 @@ $quiSuisJe = '';
 $body = '';
 $showDiv ='';
 
-if(isset($_SESSION['moi'])) {
-    $moi = preg_split("/[\s,@-]+/", $_SESSION['moi'])[0];
-}
 
 //on recupère toutes les files d'attente du service DESK ID "2" (Service En Ligne)
 
@@ -105,7 +102,12 @@ if(!empty($_POST)) {
     $serviceDeskId = 2;
     $response = "";
     $allMyTicketsArr = [];
+    if(!empty($_POST['nom'])) {
+        $_SESSION['moi'] = $_POST['nom'];
+        $moi = preg_split("/[\s,@-]+/", $_SESSION['moi'])[0];
+    }
 
+    //var_dump($_POST);exit;
     if(isset($_POST["submitCreateTicket"]) || isset($_POST['isAjax'])) {
 
 
@@ -195,8 +197,9 @@ REQUESTBODY;
 include '_sendCommentWithAttachment.php';
 
         $success = ($response->code>=200 && $response->code<300)?:0;
+        $moi = $_SESSION['moi'];
         if($success) {
-            $moi = ucfirst($moi);
+            $moi = ucfirst(preg_split("/[\s,@-]+/", $_SESSION['moi'])[0]);
             $message = $moi.", nous avons bien reçu votre demande et sommes dessus!";
         }else {
             $message = "Echec lors de la création du ticket";
