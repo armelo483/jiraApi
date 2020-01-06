@@ -5,9 +5,9 @@
     <div class="overlay" id="overlayTicket" style="position: absolute;width:100%;height:100%; z-index: 9999;"></div>
 
             <div class="create-form-div create-ticket-div fade-in col-sm-9 col-md-7 col-lg-7" style="display: inline-block;">
+                <div class="card-header" style="margin: 0 -15px 21px -15px;">Formulaire de création de tickets</div>
                    <fieldset>
                        <!-- Form Name -->
-                       <legend> Formulaire de création de tickets</legend>
                        <!-- Select Basic -->
                        <div class="form-group">
                            <label class="col-md-5 control-label" for="selectbasic">Type de ticket à créer</label>

@@ -17,6 +17,28 @@ if (isset($_GET['idIssueVal'])) {
 
     $issueIdCreated = $_GET['idIssueVal'];
 
+    //S'il appuie sur annuler une demande
+    if(isset($_GET['annuler'])) {
+       //21 est l'id de la transition d'annulation
+        $body = <<<REQUESTBODY
+{ 
+"transition": {
+        "id": "21"
+    }
+}
+REQUESTBODY;
+        https://eurelis-osac.atlassian.net/rest/api/2/issue/10128/transitions
+        $response = Unirest\Request::post(
+            'https://eurelis-osac.atlassian.net/rest/api/2/issue/'.$issueIdCreated.'/transitions',
+            $headers,
+            $body
+        );
+
+        echo json_encode([$response->code]);
+
+        exit;
+    }
+
     //On liste tous les commentaires d'un ticket
     $response = Unirest\Request::get(
         'https://eurelis-osac.atlassian.net/rest/servicedeskapi/request/'.$issueIdCreated.'/comment/',

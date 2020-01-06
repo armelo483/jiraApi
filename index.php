@@ -444,6 +444,12 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
         opacity: 0;
     }
 
+    .annulee-div {
+        background: grey;
+        height: 27px;
+        padding: 2px 0 0 30px;
+        color: white;
+    }
     /* Animation code bienvenue */
 
     .splashscreen {
@@ -461,9 +467,9 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
         font-size:32px;
         padding-top:20vh;
         overflow:hidden;
-        -webkit-backface-visibility: hidden;
-        -webkit-perspective: 1000;
-        -webkit-transform: translate3d(0,0,0);
+        //-webkit-backface-visibility: hidden;
+        //-webkit-perspective: 1000;
+        //-webkit-transform: translate3d(0,0,0);
 
     }
 
@@ -636,8 +642,6 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
             if( document.getElementById("attachmentFileUpload").files.length > 0 ){
                 //url = "index.php";
                 formData = $(this).serialize();
-
-
             }
            formData = new FormData(this);
 
@@ -698,6 +702,57 @@ $test = $myObj->getJSONArray();var_dump($test); exit;*/
                     //xhr.setRequestHeader("Accept", "application/json");
                     //xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
                     //console.log(xhr);
+                }
+            });
+
+        });
+
+        //Annule la demande
+        $(".annuler-demande").click(function(){
+
+            var currentId = $(this).attr('id');
+            var idIssueVal = currentId.substring(8);
+            var url = '_listeCommentairesAjax.php';
+            var type = 'GET';
+            var dataToSend = {isAjax : 'true', idIssueVal : idIssueVal, annuler: true};
+            console.log(idIssueVal);
+            $('#loader').show();
+            $.ajax({
+                type: type,
+                url: url,
+                data : dataToSend,
+                //dataType : 'json',
+                success: function( resp ) {
+                    $( "#"+currentId ).replaceWith("<div class='annulee-div animated fadeInLeft'>Demande annulée</div>");
+                    $( "#status_"+idIssueVal ).html("Annulé");
+                    $('#loader').hide()
+                    $.notify("Vous n'avez plus de tunes pour cette demande &#128549; ? OK elle est annulée &#x1F62D; &#x1F62D;!", {
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        }
+                    });
+
+
+                    setTimeout(function() { $.notify("Je peux vous prêter de l'argent si vous voulez &#x1F62D; &#x1F62D;!", {
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        }
+                    }); }, 4000);
+
+                    /*$.notify("Demande annulée avec succès :( !", {
+                        animate: {
+                            enter: 'animated fadeInRight',
+                            exit: 'animated fadeOutRight'
+                        }
+                    });*/
+                },
+                error : function(resultat, statut, erreur){
+                    $('#loader').hide();
+                    alert('oops');
+                },
+                beforeSend: function(xhr) {
                 }
             });
 

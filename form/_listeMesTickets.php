@@ -1,7 +1,7 @@
 
 <div style="overflow: hidden;" class="parent-liste col-xs-12 col-sm-12 col-md-12 col-lg-10  col-lg-offset-3">
            <div class="create-form-div liste-tickets-div fade-in mt-3 pt-3 pl-3">
-               <h3>Liste de mes tickets créés ou suivis(request participant)</h3>
+               <div class="card-header" style="margin: -15px 0px 21px -15px;font-size: 21px;">Liste de mes tickets créés ou suivis(request participant)</div>
                <table class="table" id="accordion">
                    <thead>
                    <tr>
@@ -19,12 +19,17 @@
                        <tr>
                            <td><?php echo $ticket->reporter->displayName; ?></td>
                            <td><?php echo $ticket->requestFieldValues[0]->value; ?></td>
-                           <td><?php echo $ticket->currentStatus->status; ?></td>
+                           <td id="status_<?php echo $ticket->issueId ?>"><?php echo $ticket->currentStatus->status; ?></td>
                            <td><?php echo $ticket->createdDate->friendly; ?></td>
                            <td><?php echo $ticketTypeArr[$ticket->requestTypeId]; ?></td>
                            <!--<td><button type="button" class="btn btn-primary afficher-comment" data-toggle="modal" data-target="#fullHeightModalRight">Afficher commentaires</button></td>-->
                            <td><button type="button" class="btn btn-primary afficher-comment">Afficher commentaires</button>
                                <input type="hidden" id="<?php echo $ticket->issueId ?>" value="<?php echo $ticket->issueId ?>"/>
+                               <?php if($ticket->requestTypeId == '22' && $ticket->currentStatus->status!='Annulé') { ?>
+                                <button type="button" id="Annuler_<?php echo $ticket->issueId ?>" class="btn btn-danger annuler-demande" style="width: 100%">Annuler ma demande</button>
+                               <?php } else if($ticket->currentStatus->status=='Annulé') {?>
+                                   <div class="annulee-div">Demande Annulée!</div>
+                               <?php } ?>
                            </td>
                            <td>
                                <button type="button" class="btn btn-primary afficher-detail-ticket" data-toggle="collapse" href="#collapseOne<?php echo $ticket->issueId ?>">détail</button>
