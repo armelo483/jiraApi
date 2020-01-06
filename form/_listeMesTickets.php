@@ -19,16 +19,16 @@
                        <tr>
                            <td><?php echo $ticket->reporter->displayName; ?></td>
                            <td><?php echo $ticket->requestFieldValues[0]->value; ?></td>
-                           <td id="status_<?php echo $ticket->issueId ?>"><?php echo $ticket->currentStatus->status; ?></td>
+                           <td id="status_<?php echo $ticket->issueId ?>"><?php if($ticket->requestTypeId != '22' ||($ticket->requestTypeId == '22' && $ticket->currentStatus->status!='Ouvrir')){echo $ticket->currentStatus->status;}else if($ticket->currentStatus->status=='Ouvrir'){ echo "En attente de paiement"; } ?></td>
                            <td><?php echo $ticket->createdDate->friendly; ?></td>
                            <td><?php echo $ticketTypeArr[$ticket->requestTypeId]; ?></td>
                            <!--<td><button type="button" class="btn btn-primary afficher-comment" data-toggle="modal" data-target="#fullHeightModalRight">Afficher commentaires</button></td>-->
                            <td><button type="button" class="btn btn-primary afficher-comment">Afficher commentaires</button>
                                <input type="hidden" id="<?php echo $ticket->issueId ?>" value="<?php echo $ticket->issueId ?>"/>
-                               <?php if($ticket->requestTypeId == '22' && $ticket->currentStatus->status!='Annulé') { ?>
+                               <?php if($ticket->requestTypeId == '22' && $ticket->currentStatus->status=='Ouvrir') { ?>
                                 <button type="button" id="Annuler_<?php echo $ticket->issueId ?>" class="btn btn-danger annuler-demande" style="width: 100%">Annuler ma demande</button>
                                <?php } else if($ticket->currentStatus->status=='Annulé') {?>
-                                   <div class="annulee-div">Demande Annulée!</div>
+                                   <div class="annulee-div">Demande Annulée !</div>
                                <?php } ?>
                            </td>
                            <td>
