@@ -27,7 +27,7 @@ if (isset($_GET['idIssueVal'])) {
     }
 }
 REQUESTBODY;
-        https://eurelis-osac.atlassian.net/rest/api/2/issue/10128/transitions
+
         $response = Unirest\Request::post(
             'https://eurelis-osac.atlassian.net/rest/api/2/issue/'.$issueIdCreated.'/transitions',
             $headers,
